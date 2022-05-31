@@ -5,9 +5,11 @@ import time
 import altair as alt
 from datetime import datetime
 from PIL import Image
+import result
 
 # calc_point에서 저장한 최종 점수 계산 경로
-point = pd.read_csv('data/point/room2_박현우_1.csv')
+result.createpdf('data/point/point_csv.csv')
+point = pd.read_csv('data/point/point_csv.csv')
 point = point.set_index('time')
 point['blend'] = point['cv'] * 0.3 + point['ml'] * 0.7
 left = pd.DataFrame(point, columns=['cv', 'ml'])  # 왼쪽에 그려지는 그래프, cv, ml 결과 같이 보여주는
@@ -39,7 +41,7 @@ if name:
                 # elif name == '박준영':
                 #     video_file = ~~
 
-                video_file = open('WIN_20220411_23_40_10_Pro.mp4', 'rb')  # 이 부분이 영상 파일 (mp4일 것)
+                video_file = open('student_video.mp4', 'rb')  # 이 부분이 영상 파일 (mp4일 것)
                 video_bytes = video_file.read()
                 _, video_layout, _ = st.columns((1, 2, 1))
                 graph_layout = st.columns(2)
