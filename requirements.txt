@@ -7,4 +7,5 @@ streamlit
 pillow
 matplotlib
 altair
+fpdf
 protobuf~=3.19.0
