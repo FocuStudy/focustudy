@@ -3,13 +3,12 @@ import json
 
 import cv2
 import numpy as np
-
 from CV.gaze_tracking.gaze_tracking import GazeTracking
 import time
 import csv
 
 face_cascade = cv2.CascadeClassifier('./CV/face_recognition/haarcascade_frontface.xml')
-video_path = 'room2_박현우_1.avi'
+video_path = 'student_video.mp4'
 cap = cv2.VideoCapture(video_path)
 gaze = GazeTracking()
 prev_x, prev_y, cur_x, cur_y = 0, 0, 0, 0
@@ -148,21 +147,43 @@ get_point()
 def parse_json(f):
     file = open(f)
     jsonString = json.load(file)
-    for i in range(2):
-        if jsonString.get("one_second_interval_classification_annotations")[i]['annotation_spec']['description'] == '2':
-            data = jsonString.get("one_second_interval_classification_annotations")[i]['frames']
-            con_data = [data[j]['confidence'] * 100 for j in range(len(data))]
-            print(len(con_data))
-            con_data = np.array([np.array(con_data[i:i + 5]).mean() for i in range(0, len(con_data), 5)])
-            con_data = np.round(con_data)
-            return con_data
+    con_data = []
+    if len(jsonString.get("one_second_interval_classification_annotations")[0]['frames']) == len(
+            jsonString.get("one_second_interval_classification_annotations")[1]['frames']):
+        for i in range(2):
+            if jsonString.get("one_second_interval_classification_annotations")[i]['annotation_spec']['description'] == '2':
+                data = jsonString.get("one_second_interval_classification_annotations")[i]['frames']
+                con_data = [data[j]['confidence'] * 100 for j in range(len(data))]
+                # print(len(con_data))
+                con_data = np.array([np.array(con_data[i:i + 5]).mean() for i in range(0, len(con_data), 5)])
 
-ml_point = parse_json('data/vertex_json/pp_prediction-untitled_16510289_20220427022643-2022-05-24T02_51_29.337693Z_student_video_1.json')
+                return con_data
+    else:
+        for i in range(2):
+            if jsonString.get("one_second_interval_classification_annotations")[i]['annotation_spec']['description'] == '0':
+                data = jsonString.get("one_second_interval_classification_annotations")[i]['frames']
+                zero_data = [[data[j]['time_offset']['seconds'], round(100 - data[j]['confidence'] * 100, 2)] for j in
+                             range(len(data))]  # 0점에 대한 데이터의 confidence 값을 2점에 대한 값으로 변경(100-confidence)한 후 2자리 반올림
+            else:
+                data = jsonString.get("one_second_interval_classification_annotations")[i]['frames']
+                two_data = [[data[j]['time_offset']['seconds'], round(data[j]['confidence'] * 100, 2)] for j in
+                            range(len(data))]
+                # con_data.append(json_data)
+        con_data = zero_data + two_data
+        print(len(con_data))
+        con_data = sorted(con_data, key=lambda x: x[0])
+        con_data = np.array(con_data)[:, 1]
+        con_data = np.array([np.array(con_data[i:i + 5]).mean() for i in range(0, len(con_data), 5)])
+        return con_data
+
+
+ml_point = parse_json('data/vertex_json/model_result.json')
 
 csv_writer = csv.writer(open('data/point/{}.csv'.format(video_path[:-4]), 'w', encoding='utf-8-sig', newline=""))
 csv_writer.writerow(['time', 'cv', 'ml', 'blend'])
+csv_writer.writerow(['0','0','0'])
 
 end = 0
 for t in range(len(cv_point)):
-    csv_writer.writerow([t * 5, cv_point[end] * 20, ml_point[t]])
+    csv_writer.writerow([(t * 5)+5, cv_point[end] * 20, ml_point[t]])
     end += 1
