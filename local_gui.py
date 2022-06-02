@@ -1,21 +1,20 @@
-import collections
+
 import cv2
 import pandas as pd
 
-from gaze_tracking.gaze_tracking import GazeTracking
 import tkinter as tk
 from PIL import ImageTk, Image  # Pillow
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 from matplotlib.figure import Figure
 import datetime
 import numpy as np
-import time
-import os
 import result
 
 scoredata = pd.read_csv('point_csv.csv', index_col='time')
 cv_list=list(scoredata['cv'])
 ml_list=list(scoredata['ml'])
+del cv_list[0]
+del ml_list[0]
 plot_list_cv=[]
 plot_list_ml=[]
 frame_cnt=0
