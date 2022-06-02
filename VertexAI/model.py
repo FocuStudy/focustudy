@@ -64,8 +64,6 @@ def modelcon():
         else:
             dir_name = re.search('"gcsOutputDirectory": "(.+?)"', str(req_out2)).group(1)
             break
-    print(dir_name)
-    dir_name='gs://focustudy-result/predict_result/prediction-untitled_16510289_20220427022643-2022-05-29T02:40:31.977477Z'
     bucket_name = 'focustudy-result'    # 서비스 계정 생성한 bucket 이름 입력
     # source_blob_name = 'predict_result/model_result/{}/student_video_1.json'.format(dir_name)    # GCP에 저장되어 있는 파일 명
     source_blob_name=dir_name[22:]+'/student_video_1.json'

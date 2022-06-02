@@ -45,4 +45,4 @@ def createpdf(point_csv):
     plt.savefig('data/cv+ml.png')
     pdf.image('data/cv+ml.png', 80, 120, 180, 90, "PNG", 'data/cv+ml.png')
     pdf.output("ResultReport1.pdf", 'F')
-createpdf('data/point/point_csv.csv')
+# createpdf('data/point/point_csv.csv')
