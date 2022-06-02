@@ -16,7 +16,7 @@ def createpdf(point_csv):
     pdf.set_font('Arial', 'B', size=20)
     pdf.set_fill_color(170)
     pdf.rect(0,0, 80, 250, 'F')
-    pdf.image('logo.png', 10, 10, 60, 60, "PNG")
+    pdf.image('Report_logo.png', 10, 10, 60, 60, "PNG")
 
     pdf.set_x(100)
     pdf.set_y(0)
@@ -45,3 +45,4 @@ def createpdf(point_csv):
     plt.savefig('data/cv+ml.png')
     pdf.image('data/cv+ml.png', 80, 120, 180, 90, "PNG", 'data/cv+ml.png')
     pdf.output("ResultReport1.pdf", 'F')
+createpdf('data/point/point_csv.csv')
