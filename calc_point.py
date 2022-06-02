@@ -85,7 +85,9 @@ def get_point():
     # 점수가 너무 높게 나오면 0.2를 줄이고
     # 점수가 낮게 나오면 0.2보다 큰 값을 주면 됨
     # 0.828, 0.719, 0.582
-    if calc_gaze > (0.828 - 0.2):
+    if gaze_frame_cnt==1 and gaze_center==1:
+        gaze_point = 0
+    elif calc_gaze > (0.828 - 0.2):
         gaze_point += 2
     elif calc_gaze > (0.719 - 0.2):
         gaze_point += 1
@@ -185,5 +187,7 @@ csv_writer.writerow(['0','0','0'])
 
 end = 0
 for t in range(len(cv_point)):
-    csv_writer.writerow([(t * 5)+5, cv_point[end] * 20, ml_point[t]])
-    end += 1
+    try:
+        csv_writer.writerow([(t * 5)+5, cv_point[end] * 20, ml_point[t]])
+        end += 1
+    except: break
