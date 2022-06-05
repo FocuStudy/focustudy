@@ -85,9 +85,7 @@ def get_point():
     # 점수가 너무 높게 나오면 0.2를 줄이고
     # 점수가 낮게 나오면 0.2보다 큰 값을 주면 됨
     # 0.828, 0.719, 0.582
-    if gaze_frame_cnt==1 and gaze_center==1:
-        gaze_point = 0
-    elif calc_gaze > (0.828 - 0.2):
+    if calc_gaze > (0.828 - 0.2):
         gaze_point += 2
     elif calc_gaze > (0.719 - 0.2):
         gaze_point += 1
