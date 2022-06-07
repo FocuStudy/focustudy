@@ -8,7 +8,7 @@ from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 from matplotlib.figure import Figure
 import datetime
 import numpy as np
-import result
+from matplotlib import font_manager, rc
 
 scoredata = pd.read_csv('point_csv.csv', index_col='time')
 cv_list=list(scoredata['cv'])
@@ -43,16 +43,16 @@ mfrm.grid(row=0, column=0)
 perfrm = tk.Frame(win, bg="white", width=500, height=300)
 perfrm.grid(row=1, column=0)
 
-Listfrm = tk.Frame(win, bg="white", width=300, height=300)
-Listfrm.grid(row=1, column=1)
+# Listfrm = tk.Frame(win, bg="white", width=300, height=300)
+# Listfrm.grid(row=1, column=1)
 
 button = tk.Button(win, overrelief="solid", command=lambda: exit_gui(), text='종료', width=15, repeatdelay=100)
 button.grid(row=2, column=1)
 lbl1 = tk.Label(frm)
 lbl1.grid(row=0, column=0)
-
-li = tk.Listbox(Listfrm, selectmode='extended', font=("Times", 13), height=15, width=30)
-li.place(x=0, y=0)
+#
+# li = tk.Listbox(Listfrm, selectmode='extended', font=("Times", 13), height=15, width=30)
+# li.place(x=0, y=0)
 
 fig = Figure(figsize=(5, 3), dpi=100)
 fig2 = Figure(figsize=(5, 3), dpi=100)
@@ -66,6 +66,7 @@ def exit_gui():
 def video():
     global frame_cnt, timelist, model_pointer, timer
     global plot_list_cv, plot_list_ml
+
     ret, frame = cap.read()
 
     frame_cnt += 1
@@ -85,11 +86,14 @@ def video():
         del cv_list[0]
         del ml_list[0]
         LineGraph = fig2.add_subplot(1, 1, 1)
+        font_path = "C:/Windows/Fonts/malgun.ttf"
+        font = font_manager.FontProperties(fname=font_path).get_name()
+        rc('font', family=font)
         # result_list.append(scorelist[-1]*0.3 + model_list[model_pointer-2]*0.7)
         result_list = np.array(plot_list_cv) * 0.3 + np.array(plot_list_ml) * 0.7
         # print(scorelist[-1] , model_list[model_pointer-2])
         LineGraph.plot(timelist[-10:], result_list[-10:])
-        LineGraph.set_title('Graph')
+        LineGraph.set_title('FocuStudy 그래프')
         LineGraph.set_xticklabels(timelist[-10:], fontsize=6, rotation=25, ha='right')
         LineGraph.set_ylim([0, 120])
         LineGraph.set_yticks([20, 40, 60, 80, 100])
@@ -102,14 +106,15 @@ def video():
 
         if len(timelist) >= 2:
             LineGraph = fig.add_subplot(1, 1, 1)
-            LineGraph.plot(timelist[-10:], plot_list_cv[-10:])
-            LineGraph.plot(timelist[-10:], plot_list_ml[0: model_pointer][-10:])
+            LineGraph.plot(timelist[-10:], plot_list_cv[-10:], label='움직임&시선 분석 모델')
+            LineGraph.plot(timelist[-10:], plot_list_ml[0: model_pointer][-10:], label='이해도 모델')
             # print(timelist[-10:], model_list[0: model_pointer][-10:])
             model_pointer += 1
-            LineGraph.set_title('model and CV Graph')
+            LineGraph.set_title('이해도 모델, 움직임&시선 분석 모델 그래프')
             LineGraph.set_xticklabels(timelist[-10:], fontsize=6, rotation=25, ha='right')
             LineGraph.set_ylim([0, 120])
             LineGraph.set_yticks([20, 40, 60, 80, 100])
+            LineGraph.legend(fontsize=7, loc='upper left')
             canvas = FigureCanvasTkAgg(fig, master=mfrm)
             canvas.get_tk_widget().grid(column=0, row=0)
 
