@@ -21,8 +21,7 @@ def createpdf(point_csv):
     pdf.set_x(100)
     pdf.set_y(0)
     pdf.set_left_margin(90)
-    # pdf.set_font('Arial', 'B', size=15)
-    pdf.cell(30, 30, txt="1. model and CV Graph", ln=4, align='L')
+    pdf.image('data/report/1_name.png',100,10, 100, 10)
     plt.plot(result_data)
     plt.ylim([0, 120])
 
@@ -34,8 +33,9 @@ def createpdf(point_csv):
 
     plt.cla()
 
-    pdf.set_font('Arial', 'B', size=20)
-    pdf.cell(30, 170, txt="2. Result Graph", ln=4, align='L')
+    # pdf.set_font('Arial', 'B', size=20)
+    # pdf.cell(30, 170, txt="2. Result Graph", ln=4, align='L')
+    pdf.image('data/report/2_name.png', 100,113, 70, 7)
     result_data['ml+cv']=result_data['cv']*0.3+result_data['ml']*0.7
     plt.plot(result_data['ml+cv'])
     plt.ylim([0, 120])
