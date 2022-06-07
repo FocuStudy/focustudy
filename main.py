@@ -11,8 +11,8 @@ import result
 result.createpdf('data/point/point_csv.csv')
 point = pd.read_csv('data/point/point_csv.csv')
 point = point.set_index('time')
-point['blend'] = point['cv'] * 0.3 + point['ml'] * 0.7
-left = pd.DataFrame(point, columns=['cv', 'ml'])  # 왼쪽에 그려지는 그래프, cv, ml 결과 같이 보여주는
+point['blend'] = point['움직임&시선 분석'] * 0.3 + point['이해도 분석'] * 0.7
+left = pd.DataFrame(point, columns=['움직임&시선 분석', '이해도 분석'])  # 왼쪽에 그려지는 그래프, cv, ml 결과 같이 보여주는
 right = pd.DataFrame(point, columns=['blend'])
 left_melt = left.reset_index().melt('time', var_name='category', value_name='y')
 left_melt = left_melt.sort_values('time')
@@ -58,13 +58,13 @@ if name:
                     alt.Y('y', title='Point'),
                     color='category:N'
                 ).properties(
-                    title='CV, ML 분석 이해도 점수')  # 이런 부분은 화면에 나타나는 부분이라 바꿔도 됨
+                    title='이해도 모델, 움직임&시선 분석 모델 그래프')  # 이런 부분은 화면에 나타나는 부분이라 바꿔도 됨
 
                 right_chart = alt.Chart(right_melt[r_start:r_end]).mark_line(interpolate='basis').encode(
                     alt.X('time', title='sec'),
                     alt.Y('y', title='Point'),
                 ).properties(
-                    title='최종 이해도 점수')
+                    title='FocuStudy 그래프')
 
                 with graph_layout[0]:
                     left_graph = st.altair_chart(left_chart, use_container_width=True)
@@ -84,13 +84,13 @@ if name:
                             alt.Y('y', title='Point'),
                             color='category:N'
                         ).properties(
-                            title='CV, ML 분석 이해도 점수')
+                            title='이해도 모델, 움직임&시선 분석 모델 그래프')
 
                         right_chart = alt.Chart(right_melt[r_start:r_end]).mark_line(interpolate='basis').encode(
                             alt.X('time', title='sec'),
                             alt.Y('y', title='Point'),
                         ).properties(
-                            title='최종 이해도 점수')
+                            title='FocuStudy 그래프')
 
                         left_graph.altair_chart(left_chart, use_container_width=True)
                         right_graph.altair_chart(right_chart, use_container_width=True)
